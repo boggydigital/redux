@@ -23,6 +23,10 @@ func (rdx *redux) Keys(asset string) iter.Seq[string] {
 	return maps.Keys(rdx.akv[asset])
 }
 
+func (rdx *redux) Len(asset string) int {
+	return len(rdx.akv[asset])
+}
+
 func (rdx *redux) HasAsset(asset string) bool {
 	_, ok := rdx.akv[asset]
 	return ok

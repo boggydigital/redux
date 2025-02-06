@@ -7,6 +7,7 @@ import (
 
 type Readable interface {
 	MustHave(assets ...string) error
+	Len(asset string) int
 	Keys(asset string) iter.Seq[string]
 	HasAsset(asset string) bool
 	HasKey(asset, key string) bool
