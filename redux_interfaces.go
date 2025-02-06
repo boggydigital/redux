@@ -7,7 +7,7 @@ import (
 
 type Readable interface {
 	MustHave(assets ...string) error
-	Keys(asset string) []string
+	Keys(asset string) iter.Seq[string]
 	HasAsset(asset string) bool
 	HasKey(asset, key string) bool
 	HasValue(asset, key, val string) bool
@@ -15,7 +15,7 @@ type Readable interface {
 	GetLastVal(asset, key string) (string, bool)
 	FileModTime() (int64, error)
 	RefreshReader() (Readable, error)
-	MatchAsset(asset string, terms []string, scope []string, options ...MatchOption) iter.Seq[string]
+	MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string]
 	Match(query map[string][]string, options ...MatchOption) iter.Seq[string]
 	Sort(ids []string, desc bool, sortBy ...string) ([]string, error)
 	Export(w io.Writer, keys ...string) error

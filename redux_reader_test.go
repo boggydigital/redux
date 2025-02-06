@@ -30,8 +30,12 @@ func TestRedux_Keys(t *testing.T) {
 	rdx := mockRedux(t)
 	for asset := range rdx.akv {
 		keys := rdx.Keys(asset)
-		testo.EqualValues(t, len(keys), len(rdx.akv[asset]))
-		for _, k := range keys {
+		keysLen := 0
+		for range keys {
+			keysLen++
+		}
+		testo.EqualValues(t, keysLen, len(rdx.akv[asset]))
+		for k := range keys {
 			_, ok := rdx.akv[asset][k]
 			testo.EqualValues(t, ok, true)
 		}

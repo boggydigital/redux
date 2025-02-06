@@ -16,7 +16,7 @@ const (
 
 func (rdx *redux) MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string] {
 	if scope == nil {
-		scope = slices.Values(rdx.Keys(asset))
+		scope = rdx.Keys(asset)
 	}
 
 	matches := make(map[string]interface{})
