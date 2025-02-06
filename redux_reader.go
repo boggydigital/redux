@@ -1,8 +1,9 @@
 package redux
 
 import (
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
+	"iter"
+	"maps"
+	"slices"
 )
 
 func NewReader(dir string, assets ...string) (Readable, error) {
@@ -18,7 +19,7 @@ func (rdx *redux) MustHave(assets ...string) error {
 	return nil
 }
 
-func (rdx *redux) Keys(asset string) []string {
+func (rdx *redux) Keys(asset string) iter.Seq[string] {
 	return maps.Keys(rdx.akv[asset])
 }
 

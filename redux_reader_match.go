@@ -1,8 +1,9 @@
 package redux
 
 import (
-	"golang.org/x/exp/maps"
-	"golang.org/x/exp/slices"
+	"iter"
+	"maps"
+	"slices"
 	"strings"
 )
 
@@ -13,9 +14,9 @@ const (
 	FullMatch
 )
 
-func (rdx *redux) MatchAsset(asset string, terms []string, scope []string, options ...MatchOption) []string {
+func (rdx *redux) MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string] {
 	if scope == nil {
-		scope = rdx.Keys(asset)
+		scope = slices.Values(rdx.Keys(asset))
 	}
 
 	matches := make(map[string]interface{})
@@ -23,7 +24,7 @@ func (rdx *redux) MatchAsset(asset string, terms []string, scope []string, optio
 		if !slices.Contains(options, CaseSensitive) {
 			term = strings.ToLower(term)
 		}
-		for _, key := range scope {
+		for key := range scope {
 			if values, ok := rdx.GetAllValues(asset, key); !ok {
 				continue
 			} else if anyValueMatchesTerm(term, values, options...) {
@@ -35,8 +36,8 @@ func (rdx *redux) MatchAsset(asset string, terms []string, scope []string, optio
 	return maps.Keys(matches)
 }
 
-func (rdx *redux) Match(query map[string][]string, options ...MatchOption) []string {
-	var matches []string
+func (rdx *redux) Match(query map[string][]string, options ...MatchOption) iter.Seq[string] {
+	var matches iter.Seq[string]
 	for asset, terms := range query {
 		if !rdx.HasAsset(asset) {
 			continue

@@ -3,7 +3,7 @@ package redux
 import (
 	"bytes"
 	"encoding/gob"
-	"golang.org/x/exp/slices"
+	"slices"
 )
 
 func NewWriter(dir string, assets ...string) (Writeable, error) {
@@ -21,11 +21,14 @@ func (rdx *redux) addValues(asset, key string, values ...string) error {
 		}
 	}
 	rdx.akv[asset][key] = append(rdx.akv[asset][key], newValues...)
-	return rdx.write(asset)
+	return nil
 }
 
 func (rdx *redux) AddValues(asset, key string, values ...string) error {
-	return rdx.addValues(asset, key, values...)
+	if err := rdx.addValues(asset, key, values...); err != nil {
+		return err
+	}
+	return rdx.write(asset)
 }
 
 func (rdx *redux) BatchAddValues(asset string, keyValues map[string][]string) error {
@@ -34,7 +37,7 @@ func (rdx *redux) BatchAddValues(asset string, keyValues map[string][]string) er
 			return err
 		}
 	}
-	return nil
+	return rdx.write(asset)
 }
 
 func (rdx *redux) replaceValues(asset, key string, values ...string) error {
