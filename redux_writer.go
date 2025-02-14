@@ -20,6 +20,10 @@ func (rdx *redux) addValues(asset, key string, values ...string) error {
 			newValues = append(newValues, v)
 		}
 	}
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	rdx.akv[asset][key] = append(rdx.akv[asset][key], newValues...)
 	return nil
 }
@@ -44,6 +48,10 @@ func (rdx *redux) replaceValues(asset, key string, values ...string) error {
 	if !rdx.HasAsset(asset) {
 		return ErrUnknownAsset(asset)
 	}
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	rdx.akv[asset][key] = values
 	return nil
 }
@@ -76,6 +84,9 @@ func (rdx *redux) cutValues(asset, key string, values ...string) error {
 	}
 
 	newValues := make([]string, 0, len(rdx.akv[asset][key]))
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
 
 	for _, v := range rdx.akv[asset][key] {
 		if slices.Contains(values, v) {
@@ -130,6 +141,9 @@ func (rdx *redux) write(asset string) error {
 	if !rdx.HasAsset(asset) {
 		return ErrUnknownAsset(asset)
 	}
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
 
 	buf := new(bytes.Buffer)
 	if err := gob.NewEncoder(buf).Encode(rdx.akv[asset]); err != nil {

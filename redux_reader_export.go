@@ -13,6 +13,9 @@ func (rdx *redux) Export(w io.Writer, keys ...string) error {
 
 	skv := make(wits.SectionKeyValues)
 
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	for _, key := range keys {
 		skv[key] = make(wits.KeyValues)
 		for _, asset := range sortedAssets {

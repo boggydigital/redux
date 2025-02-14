@@ -24,6 +24,9 @@ func (rdx *redux) FileModTime() (int64, error) {
 		return kevlar.UnknownModTime, err
 	}
 
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	var mt int64 = kevlar.UnknownModTime
 	for asset := range rdx.akv {
 		if amt, ok := almt[asset]; ok && amt > mt {
@@ -40,6 +43,10 @@ func (rdx *redux) refresh() (*redux, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	for asset := range rdx.akv {
 		// asset was updated externally or not loaded yet
 		if rdx.lmt[asset] < amts[asset] {

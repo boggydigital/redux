@@ -20,6 +20,9 @@ func (rdx *redux) MustHave(assets ...string) error {
 }
 
 func (rdx *redux) Keys(asset string) iter.Seq[string] {
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	return maps.Keys(rdx.akv[asset])
 }
 
@@ -33,6 +36,9 @@ func (rdx *redux) HasAsset(asset string) bool {
 }
 
 func (rdx *redux) HasKey(asset, key string) bool {
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	if akr, ok := rdx.akv[asset]; ok {
 		_, ok = akr[key]
 		return ok
@@ -41,6 +47,9 @@ func (rdx *redux) HasKey(asset, key string) bool {
 }
 
 func (rdx *redux) HasValue(asset, key, val string) bool {
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	if akr, ok := rdx.akv[asset]; ok {
 		if kr, ok := akr[key]; ok {
 			return slices.Contains(kr, val)
@@ -54,6 +63,10 @@ func (rdx *redux) GetAllValues(asset, key string) ([]string, bool) {
 	if !rdx.HasAsset(asset) {
 		return nil, false
 	}
+
+	rdx.mtx.Lock()
+	defer rdx.mtx.Unlock()
+
 	if rdx.akv[asset] == nil {
 		return nil, false
 	}

@@ -6,6 +6,7 @@ import (
 	"maps"
 	"slices"
 	"strconv"
+	"sync"
 	"testing"
 )
 
@@ -46,7 +47,7 @@ func TestRedux_MatchAsset(t *testing.T) {
 		{"t", []string{"title"}, limitedScope, []MatchOption{CaseSensitive, FullMatch}, nil},
 	}
 
-	rdx := &redux{akv: matchableAKV}
+	rdx := &redux{akv: matchableAKV, mtx: new(sync.Mutex)}
 	for ii, tt := range tests {
 		t.Run(strconv.Itoa(ii), func(t *testing.T) {
 			found := rdx.MatchAsset(tt.asset, tt.terms, tt.scope, tt.options...)
@@ -86,7 +87,7 @@ func TestRedux_Match(t *testing.T) {
 		{map[string][]string{"t": {"title"}, "v": {"value"}}, []MatchOption{FullMatch}, nil},
 	}
 
-	rdx := &redux{akv: matchableAKV}
+	rdx := &redux{akv: matchableAKV, mtx: new(sync.Mutex)}
 	for ii, tt := range tests {
 		t.Run(strconv.Itoa(ii), func(t *testing.T) {
 			if found := rdx.Match(tt.query, tt.options...); found != nil {

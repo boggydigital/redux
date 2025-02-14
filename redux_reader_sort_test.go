@@ -3,6 +3,7 @@ package redux
 import (
 	"github.com/boggydigital/testo"
 	"strconv"
+	"sync"
 	"testing"
 )
 
@@ -53,7 +54,7 @@ func TestRedux_Sort(t *testing.T) {
 		{ids, true, []string{"asset-that-doesnt-exist"}, nil, true},
 	}
 
-	rdx := &redux{akv: sortableAKV}
+	rdx := &redux{akv: sortableAKV, mtx: new(sync.Mutex)}
 	for i, tt := range tests {
 		t.Run(strconv.Itoa(i), func(t *testing.T) {
 			tr, err := rdx.Sort(tt.ids, tt.desc, tt.assets...)
