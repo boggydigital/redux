@@ -1,9 +1,12 @@
 package redux
 
 import (
+	"errors"
 	"iter"
 	"maps"
+	"path"
 	"slices"
+	"time"
 )
 
 func NewReader(dir string, assets ...string) (Readable, error) {
@@ -80,4 +83,16 @@ func (rdx *redux) GetLastVal(asset, key string) (string, bool) {
 		return values[len(values)-1], true
 	}
 	return "", false
+}
+
+func (rdx *redux) ParseLastValTime(asset, key string) (time.Time, error) {
+	if lvs, ok := rdx.GetLastVal(asset, key); ok && lvs != "" {
+		if dt, err := time.Parse(time.RFC3339, lvs); err == nil {
+			return dt, nil
+		} else {
+			return time.Time{}, err
+		}
+	} else {
+		return time.Time{}, errors.New("value not found for " + path.Join(asset, key))
+	}
 }

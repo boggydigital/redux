@@ -3,6 +3,7 @@ package redux
 import (
 	"io"
 	"iter"
+	"time"
 )
 
 type Readable interface {
@@ -14,6 +15,7 @@ type Readable interface {
 	HasValue(asset, key, val string) bool
 	GetAllValues(asset, key string) ([]string, bool)
 	GetLastVal(asset, key string) (string, bool)
+	ParseLastValTime(asset, key string) (time.Time, error)
 	FileModTime() (int64, error)
 	RefreshReader() (Readable, error)
 	MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string]
