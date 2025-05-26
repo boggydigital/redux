@@ -1,10 +1,8 @@
 package redux
 
 import (
-	"errors"
 	"iter"
 	"maps"
-	"path"
 	"slices"
 	"time"
 )
@@ -93,6 +91,6 @@ func (rdx *redux) ParseLastValTime(asset, key string) (time.Time, error) {
 			return time.Time{}, err
 		}
 	} else {
-		return time.Time{}, errors.New("value not found for " + path.Join(asset, key))
+		return time.Time{}, nil
 	}
 }
