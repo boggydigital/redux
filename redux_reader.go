@@ -84,6 +84,10 @@ func (rdx *redux) GetLastVal(asset, key string) (string, bool) {
 }
 
 func (rdx *redux) ParseLastValTime(asset, key string) (time.Time, error) {
+	if err := rdx.MustHave(asset); err != nil {
+		return time.Time{}, err
+	}
+
 	if lvs, ok := rdx.GetLastVal(asset, key); ok && lvs != "" {
 		if dt, err := time.Parse(time.RFC3339, lvs); err == nil {
 			return dt, nil
