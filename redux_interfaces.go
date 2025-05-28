@@ -15,7 +15,7 @@ type Readable interface {
 	HasValue(asset, key, val string) bool
 	GetAllValues(asset, key string) ([]string, bool)
 	GetLastVal(asset, key string) (string, bool)
-	ParseLastValTime(asset, key string) (time.Time, error)
+	ParseLastValTime(asset, key string) (time.Time, bool, error)
 	FileModTime() (int64, error)
 	RefreshReader() (Readable, error)
 	MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string]
