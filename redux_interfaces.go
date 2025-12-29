@@ -1,7 +1,6 @@
 package redux
 
 import (
-	"io"
 	"iter"
 	"time"
 )
@@ -21,7 +20,6 @@ type Readable interface {
 	MatchAsset(asset string, terms []string, scope iter.Seq[string], options ...MatchOption) iter.Seq[string]
 	Match(query map[string][]string, options ...MatchOption) iter.Seq[string]
 	Sort(ids []string, desc bool, sortBy ...string) ([]string, error)
-	Export(w io.Writer, keys ...string) error
 }
 
 type Writeable interface {
